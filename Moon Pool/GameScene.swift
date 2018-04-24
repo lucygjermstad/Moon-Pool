@@ -6,6 +6,7 @@
 //  Copyright © 2018 Lucy Gjermstad. All rights reserved.
 // zimka
 //lwiza
+// shanna
 
 import SpriteKit
 import GameplayKit
