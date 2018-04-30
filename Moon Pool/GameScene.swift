@@ -31,6 +31,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         for touch in touches {
             let location = touch.location(in: self)
             paddle.position.y = location.y
+            paddle.position.x = location.x
+            
         }
     }
     
@@ -38,6 +40,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         for touch in touches {
             let location = touch.location(in: self)
             paddle.position.y = location.y
+            paddle.position.x = location.x
+
             
         }
     }
@@ -281,7 +285,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         ball10.physicsBody?.affectedByGravity = false
         ball10.physicsBody?.restitution = 1
         ball10.physicsBody?.linearDamping = 0
-        ball10.physicsBody?.contactTestBitMask = (ball9.physicsBody?.collisionBitMask)!
+        ball10.physicsBody?.contactTestBitMask = (ball10.physicsBody?.collisionBitMask)!
         addChild(ball10)
     }
     
@@ -289,6 +293,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         
         paddle = SKSpriteNode(color: UIColor.white, size: CGSize(width: frame.width/18, height: 100))
         paddle.position = CGPoint(x: frame.midX, y: frame.midY - 250)
+        
         paddle.name = "paddle"
         paddle.physicsBody = SKPhysicsBody(rectangleOf: paddle.size)
         paddle.physicsBody?.isDynamic = false
@@ -323,13 +328,3 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
     }
     
 }
-
-
-
-
-
-
-
-
-
-
