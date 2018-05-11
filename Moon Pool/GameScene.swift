@@ -51,23 +51,60 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
     func didBegin(_ contact: SKPhysicsContact) {
         if contact.bodyA.node?.name == "brick" || contact.bodyB.node?.name == "brick" {
             print ("you win")
-            brick.removeFromParent()
+            //brick.removeFromParent()
             
             
         }
         if contact.bodyA.node?.name == "loseZoneTopRight" || contact.bodyB.node?.name == "loseZoneTopRight" {
             print ("you lose")
             ball.removeFromParent()
+        }
+        if contact.bodyA.node?.name == "loseZoneTopLeft" || contact.bodyB.node?.name == "loseZoneTopLeft" {
+            print ("you lose")
+            ball2.fillColor = UIColor.black
+        }
+        
+            /*ball3.fillColor = UIColor.black
+            ball4.fillColor = UIColor.black
+            ball5.fillColor = UIColor.black
+            ball6.fillColor = UIColor.black
+            ball7.fillColor = UIColor.black
+            ball8.fillColor = UIColor.black
+            ball9.fillColor = UIColor.black
+            ball10.fillColor = UIColor.black
+        }
+ 
+        if ball == loseZoneTopRight || ball == loseZoneTopLeft || ball == loseZoneBottomLeft || ball == loseZoneBottomRight{
+            ball.fillColor = UIColor.black
+        }
+        if ball2 == loseZoneTopRight || ball2 == loseZoneTopLeft || ball2 == loseZoneBottomLeft || ball2 == loseZoneBottomRight{
             ball2.removeFromParent()
+        }
+        if ball3 == loseZoneTopRight || ball3 == loseZoneTopLeft || ball3 == loseZoneBottomLeft || ball3 == loseZoneBottomRight{
             ball3.removeFromParent()
+        }
+        if ball4 == loseZoneTopRight || ball4 == loseZoneTopLeft || ball4 == loseZoneBottomLeft || ball4 == loseZoneBottomRight{
             ball4.removeFromParent()
+        }
+        if ball5 == loseZoneTopRight || ball5 == loseZoneTopLeft || ball5 == loseZoneBottomLeft || ball5 == loseZoneBottomRight{
             ball5.removeFromParent()
+        }
+        if ball6 == loseZoneTopRight || ball6 == loseZoneTopLeft || ball6 == loseZoneBottomLeft || ball6 == loseZoneBottomRight{
             ball6.removeFromParent()
+        }
+        if ball7 == loseZoneTopRight || ball7 == loseZoneTopLeft || ball7 == loseZoneBottomLeft || ball7 == loseZoneBottomRight{
             ball7.removeFromParent()
+        }
+        if ball8 == loseZoneTopRight || ball8 == loseZoneTopLeft || ball8 == loseZoneBottomLeft || ball8 == loseZoneBottomRight{
             ball8.removeFromParent()
+        }
+        if ball9 == loseZoneTopRight || ball9 == loseZoneTopLeft || ball9 == loseZoneBottomLeft || ball9 == loseZoneBottomRight{
             ball9.removeFromParent()
+        }
+        if ball10 == loseZoneTopRight || ball10 == loseZoneTopLeft || ball10 == loseZoneBottomLeft || ball10 == loseZoneBottomRight{
             ball10.removeFromParent()
         }
+     */
     }
     override func didMove(to view: SKView) {
         physicsWorld.contactDelegate = self
