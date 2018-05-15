@@ -351,7 +351,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         loseZoneBottomLeft.physicsBody?.isDynamic = false
         loseZoneBottomLeft.physicsBody?.usesPreciseCollisionDetection = true
         addChild(loseZoneBottomLeft)
-    }
+    } //
     func makeLoseZoneBottomRight(){
         loseZoneBottomRight = SKSpriteNode(color: UIColor.red, size: CGSize(width:frame.width/50, height: 10))
         loseZoneBottomRight = SKSpriteNode(imageNamed: "blackHole")
