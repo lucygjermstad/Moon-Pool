@@ -369,44 +369,4 @@
     
     
     
-    func makeLoseZoneTopRight(){
-        loseZoneTopRight = SKSpriteNode(color: UIColor.red, size: CGSize(width:frame.width/50, height: 10))
-        loseZoneTopRight = SKSpriteNode(imageNamed: "blackHole")
-        loseZoneTopRight.position = CGPoint(x: frame.midX+170, y: frame.maxY - 20)
-        loseZoneTopRight.name = "loseZoneTopRight"
-        loseZoneTopRight.physicsBody = SKPhysicsBody(circleOfRadius: 10)
-        loseZoneTopRight.physicsBody?.isDynamic = false
-        loseZoneTopRight.physicsBody?.usesPreciseCollisionDetection = true
-        addChild(loseZoneTopRight)
-    }
-    func makeLoseZoneTopLeft(){
-        loseZoneTopLeft = SKSpriteNode(color: UIColor.red, size: CGSize(width:frame.width/50, height: 10))
-        loseZoneTopLeft = SKSpriteNode(imageNamed: "blackHole")
-        loseZoneTopLeft.position = CGPoint(x: frame.midX-170, y: frame.maxY - 20)
-        loseZoneTopLeft.name = "loseZoneTopRight"
-        loseZoneTopLeft.physicsBody = SKPhysicsBody(circleOfRadius: 10)
-        loseZoneTopLeft.physicsBody?.isDynamic = false
-        loseZoneTopLeft.physicsBody?.usesPreciseCollisionDetection = true
-        addChild(loseZoneTopLeft)
-    }
-    func makeLoseZoneBottomLeft(){
-        loseZoneBottomLeft = SKSpriteNode(color: UIColor.red, size: CGSize(width:frame.width/50, height: 10))
-        loseZoneBottomLeft = SKSpriteNode(imageNamed: "blackHole")
-        loseZoneBottomLeft.position = CGPoint(x: frame.midX-170, y: frame.maxY - 645)
-        loseZoneBottomLeft.name = "loseZoneTopRight"
-       loseZoneBottomLeft.physicsBody = SKPhysicsBody(circleOfRadius: 10)
-        loseZoneBottomLeft.physicsBody?.isDynamic = false
-        loseZoneBottomLeft.physicsBody?.usesPreciseCollisionDetection = true
-        addChild(loseZoneBottomLeft)
-    } //
-    func makeLoseZoneBottomRight(){
-        loseZoneBottomRight = SKSpriteNode(color: UIColor.red, size: CGSize(width:frame.width/50, height: 10))
-        loseZoneBottomRight = SKSpriteNode(imageNamed: "blackHole")
-        loseZoneBottomRight.position = CGPoint(x: frame.midX+170, y: frame.maxY - 645)
-        loseZoneBottomRight.name = "loseZoneTopRight"
-        loseZoneBottomRight.physicsBody = SKPhysicsBody(circleOfRadius: 10)
-        loseZoneBottomRight.physicsBody?.isDynamic = false
-        loseZoneBottomRight.physicsBody?.usesPreciseCollisionDetection = true
-        addChild(loseZoneBottomRight)
-    }
     
