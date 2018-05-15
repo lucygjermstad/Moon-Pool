@@ -8,20 +8,12 @@
     //lwiza
     // shanna
     
+    
     import SpriteKit
     import GameplayKit
     
-    class GameScene: SKScene, SKPhysicsContactDelegate{
-        
-        enum CollisionBody:UInt32{
-            case None = 1
-            case Ball = 2
-            case Coin = 3
-            
-        }
-        
+    class GameScene: SKScene, SKPhysicsContactDelegate {        
         var ball = SKShapeNode()
-        private var ballRadius: CGFloat = 25
         var ball2 = SKShapeNode()
         var ball3 = SKShapeNode()
         var ball4 = SKShapeNode()
@@ -38,101 +30,6 @@
         var loseZoneBottomLeft = SKSpriteNode()
         var loseZoneBottomRight = SKSpriteNode()
         
-        //sling outlets
-        private var sling : SKNode!
-        private var rightSlingPosition: CGPoint!
-        private var rightSling: SKShapeNode!
-        
-        
-        
-        //game info
-        private var movingBall = false
-        private var gameOver = false
-        private var ballIsFlying = false
-        
-        override func didMove(to view: SKView){
-            self.physicsWorld.contactDelegate = self
-            
-            //sling
-            self.sling = self.childNode(withName: "//sling")
-            var path = CGMutablePath()
-            
-            self.rightSlingPosition = self.childNode(withName: "//rightSling")!.position
-            
-            path = CGMutablePath()
-            path.move(to: CGPoint.zero)
-            path.addLine(to: sling.position.subtract(point: rightSlingPosition))
-            path.closeSubpath()
-            
-            self.rightSling = SKShapeNode(path: path)
-            self.rightSling.lineWidth = 8
-            self.rightSling.zPosition = 2
-            self.rightSling.fillColor = SKColor.green
-            self.rightSling.strokeColor = SKColor.green
-            self.addChild(self.rightSling)
-            
-            self.rightSling.position = self.rightSlingPosition
-            
-        }
-        
-        override func update(_ currentTime: TimeInterval) {
-            
-            // look to see if ball is off screen
-            if ball.position.y < -self.size.height/2-100 && !gameOver{
-                
-                if self.childNode(withName: "coin") == nil{
-                    gameOver = true
-                    ball.removeFromParent()
-                }
-                else{
-                    ball.physicsBody = nil
-                    ball.position = sling.position
-                    self.ballIsFlying = false
-                    
-                }
-                
-            }
-        }
-        
-        
-        func didBegin(_ contact: SKPhysicsContact) {
-            
-            
-        }
-        
-        //MARK: - Touch Logic
-        func touchDown(atPoint pos : CGPoint) {
-            for node in self.nodes(at: pos){
-                if node == ball && !self.ballIsFlying{
-                    movingBall = true
-                }
-            }
-        }
-        
-        func touchMoved(toPoint pos : CGPoint) {
-            if movingBall {
-                //Distance from sling
-                let movePosition = CGPoint(x:(pos.x-sling.position.x), y:(pos.y-sling.position.y))
-                //Clamp
-                //let standardDistance = ballRadius * 6
-                //let normalX = movePosition.x.clamped(v1: -standardDistance, standardDistance)
-                //let normalY = movePosition.y.clamped(v1: -standardDistance, standardDistance)
-                
-                //let convertedDistance = CGPoint(x: normalX, y: normalY)
-                
-                //ball.position = convertedDistance.addPoint(point: sling.position)
-                
-                //Updating sling position
-                var path = CGMutablePath()
-                path.move(to: CGPoint.zero)
-                path.addLine(to: ball.position.subtract(point: rightSlingPosition))
-                path.closeSubpath()
-                self.rightSling.path = path
-                
-                
-            }
-        }
-
         override func touchesBegan(_ touches: Set<UITouch>, with: UIEvent?){
             for touch in touches {
                 let location = touch.location(in: self)
@@ -151,10 +48,10 @@
                 
             }
         }
-        func didBegins(_ contact: SKPhysicsContact) {
+        func didBegin(_ contact: SKPhysicsContact) {
             if contact.bodyA.node?.name == "brick" || contact.bodyB.node?.name == "brick" {
                 print ("you win")
-                brick.removeFromParent()
+                //brick.removeFromParent()
                 
                 
             }
@@ -215,19 +112,26 @@
             ball10.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 0))
             
         }
-    }
-    func didBegin(_ contact: SKPhysicsContact) {
-        if contact.bodyA.node?.name == "brick" || contact.bodyB.node?.name == "brick" {
-            print ("you win")
-            //brick.removeFromParent()
+        
+        
+        
+        func createBackground(){
+            let stars = SKTexture(imageNamed: "stars")
+            for i in 0...1 {
+                let starsBackground = SKSpriteNode(texture: stars)
+                starsBackground.zPosition = -1
+                starsBackground.position = CGPoint(x: 0, y: starsBackground.size.height * CGFloat(i))
+                addChild(starsBackground) // this sends background to game scene
+                let moveDown = SKAction.moveBy(x: 0, y: -starsBackground.size.height, duration: 20)
+                let moveReset = SKAction.moveBy(x: 0, y: starsBackground.size.height, duration: 0)
+                let moveLoop = SKAction.sequence([moveDown, moveReset])
+                let moveForever = SKAction.repeatForever(moveLoop)
+                starsBackground.run(moveForever)
+                //makes array of let
+                //endless loop
+            }
             
         }
-        
-        
-        
-        
-        
-        
         
         func makeBall(){
             ball = SKShapeNode(circleOfRadius: 15)
@@ -243,105 +147,120 @@
             ball.physicsBody?.restitution = 1
             ball.physicsBody?.linearDamping = 0.4
             ball.physicsBody?.contactTestBitMask = (ball.physicsBody?.collisionBitMask)!
-            self.ball.position = sling.position
-            let speed: CGFloat = 2
-            let force = CGVector(dx: (sling.position.x-ball.position.x) * speed, dy: (sling.position.y-ball.position.y) * speed)
-            ball.physicsBody?.applyImpulse(force)
-            
             addChild(ball)
         }
-        if contact.bodyA.node?.name == "loseZoneTopRight" || contact.bodyB.node?.name == "loseZoneTopRight" {
-            print ("you lose")
-            ball.removeFromParent()
+        func makeBall2(){
+            ball2 = SKShapeNode(circleOfRadius: 10)
+            ball2.position = CGPoint(x: frame.midX-29, y: frame.maxY-250)
+            ball2.strokeColor = UIColor.black
+            ball2.fillColor = UIColor.orange
+            ball2.name = "ball"
+            ball2.physicsBody = SKPhysicsBody(circleOfRadius: 10)
+            ball2.physicsBody?.isDynamic = false
+            ball2.physicsBody?.usesPreciseCollisionDetection = true
+            ball2.physicsBody?.friction = 0
+            ball2.physicsBody?.affectedByGravity = false
+            ball2.physicsBody?.restitution = 1
+            ball2.physicsBody?.linearDamping = 0.4
+            ball2.physicsBody?.contactTestBitMask = (ball2.physicsBody?.collisionBitMask)!
+            addChild(ball2)
         }
-        if contact.bodyA.node?.name == "loseZoneTopLeft" || contact.bodyB.node?.name == "loseZoneTopLeft" {
-            print ("you lose")
-            ball2.fillColor = UIColor.black
+        func makeBall3(){
+            ball3 = SKShapeNode(circleOfRadius: 10)
+            ball3.position = CGPoint(x: frame.midX+29, y: frame.maxY-250)
+            ball3.strokeColor = UIColor.black
+            ball3.fillColor = UIColor.red
+            ball3.name = "ball"
+            ball3.physicsBody = SKPhysicsBody(circleOfRadius: 10)
+            ball3.physicsBody?.isDynamic = false
+            ball3.physicsBody?.usesPreciseCollisionDetection = true
+            ball3.physicsBody?.friction = 0
+            ball3.physicsBody?.affectedByGravity = false
+            ball3.physicsBody?.restitution = 1
+            ball3.physicsBody?.linearDamping = 0.4
+            ball3.physicsBody?.contactTestBitMask = (ball3.physicsBody?.collisionBitMask)!
+            addChild(ball3)
         }
-        
-            /*ball3.fillColor = UIColor.black
-            ball4.fillColor = UIColor.black
-            ball5.fillColor = UIColor.black
-            ball6.fillColor = UIColor.black
-            ball7.fillColor = UIColor.black
-            ball8.fillColor = UIColor.black
-            ball9.fillColor = UIColor.black
-            ball10.fillColor = UIColor.black
+        func makeBall4(){
+            ball4 = SKShapeNode(circleOfRadius: 10)
+            ball4.position = CGPoint(x: frame.midX-15, y: frame.maxY-228)
+            ball4.strokeColor = UIColor.black
+            ball4.fillColor = UIColor.white
+            ball4.name = "ball"
+            ball4.physicsBody = SKPhysicsBody(circleOfRadius: 10)
+            ball4.physicsBody?.isDynamic = false
+            ball4.physicsBody?.usesPreciseCollisionDetection = true
+            ball4.physicsBody?.friction = 0
+            ball4.physicsBody?.affectedByGravity = false
+            ball4.physicsBody?.restitution = 1
+            ball4.physicsBody?.linearDamping = 0.4
+            ball4.physicsBody?.contactTestBitMask = (ball4.physicsBody?.collisionBitMask)!
+            addChild(ball4)
         }
- 
-        if ball == loseZoneTopRight || ball == loseZoneTopLeft || ball == loseZoneBottomLeft || ball == loseZoneBottomRight{
-            ball.fillColor = UIColor.black
+        func makeBall5(){
+            ball5 = SKShapeNode(circleOfRadius: 10)
+            ball5.position = CGPoint(x: frame.midX+15, y: frame.maxY-228)
+            ball5.strokeColor = UIColor.black
+            ball5.fillColor = UIColor.gray
+            ball5.name = "ball"
+            ball5.physicsBody = SKPhysicsBody(circleOfRadius: 10)
+            ball5.physicsBody?.isDynamic = false
+            ball5.physicsBody?.usesPreciseCollisionDetection = true
+            ball5.physicsBody?.friction = 0
+            ball5.physicsBody?.affectedByGravity = false
+            ball5.physicsBody?.restitution = 1
+            ball5.physicsBody?.linearDamping = 0.4
+            ball5.physicsBody?.contactTestBitMask = (ball5.physicsBody?.collisionBitMask)!
+            addChild(ball5)
         }
-        if ball2 == loseZoneTopRight || ball2 == loseZoneTopLeft || ball2 == loseZoneBottomLeft || ball2 == loseZoneBottomRight{
-            ball2.removeFromParent()
+        func makeBall6(){
+            ball6 = SKShapeNode(circleOfRadius: 10)
+            ball6.position = CGPoint(x: frame.midX, y: frame.maxY-206)
+            ball6.strokeColor = UIColor.black
+            ball6.fillColor = UIColor.purple
+            ball6.name = "ball"
+            ball6.physicsBody = SKPhysicsBody(circleOfRadius: 10)
+            ball6.physicsBody?.isDynamic = false
+            ball6.physicsBody?.usesPreciseCollisionDetection = true
+            ball6.physicsBody?.friction = 0
+            ball6.physicsBody?.affectedByGravity = false
+            ball6.physicsBody?.restitution = 1
+            ball6.physicsBody?.linearDamping = 0.4
+            ball6.physicsBody?.contactTestBitMask = (ball6.physicsBody?.collisionBitMask)!
+            addChild(ball6)
         }
-        if ball3 == loseZoneTopRight || ball3 == loseZoneTopLeft || ball3 == loseZoneBottomLeft || ball3 == loseZoneBottomRight{
-            ball3.removeFromParent()
+        func makeBall7(){
+            ball7 = SKShapeNode(circleOfRadius: 10)
+            ball7.position = CGPoint(x: frame.midX-15, y: frame.maxY-273)
+            ball7.strokeColor = UIColor.black
+            ball7.fillColor = UIColor.green
+            ball7.name = "ball"
+            ball7.physicsBody = SKPhysicsBody(circleOfRadius: 10)
+            ball7.physicsBody?.isDynamic = false
+            ball7.physicsBody?.usesPreciseCollisionDetection = true
+            ball7.physicsBody?.friction = 0
+            ball7.physicsBody?.affectedByGravity = false
+            ball7.physicsBody?.restitution = 1
+            ball7.physicsBody?.linearDamping = 0.4
+            ball7.physicsBody?.contactTestBitMask = (ball7.physicsBody?.collisionBitMask)!
+            addChild(ball7)
         }
-        if ball4 == loseZoneTopRight || ball4 == loseZoneTopLeft || ball4 == loseZoneBottomLeft || ball4 == loseZoneBottomRight{
-            ball4.removeFromParent()
+        func makeBall8(){
+            ball8 = SKShapeNode(circleOfRadius: 10)
+            ball8.position = CGPoint(x: frame.midX+15, y: frame.maxY-273)
+            ball8.strokeColor = UIColor.black
+            ball8.fillColor = UIColor.blue
+            ball8.name = "ball"
+            ball8.physicsBody = SKPhysicsBody(circleOfRadius: 10)
+            ball8.physicsBody?.isDynamic = false
+            ball8.physicsBody?.usesPreciseCollisionDetection = true
+            ball8.physicsBody?.friction = 0
+            ball8.physicsBody?.affectedByGravity = false
+            ball8.physicsBody?.restitution = 1
+            ball8.physicsBody?.linearDamping = 0.4
+            ball8.physicsBody?.contactTestBitMask = (ball8.physicsBody?.collisionBitMask)!
+            addChild(ball8)
         }
-        if ball5 == loseZoneTopRight || ball5 == loseZoneTopLeft || ball5 == loseZoneBottomLeft || ball5 == loseZoneBottomRight{
-            ball5.removeFromParent()
-        }
-        if ball6 == loseZoneTopRight || ball6 == loseZoneTopLeft || ball6 == loseZoneBottomLeft || ball6 == loseZoneBottomRight{
-            ball6.removeFromParent()
-        }
-        if ball7 == loseZoneTopRight || ball7 == loseZoneTopLeft || ball7 == loseZoneBottomLeft || ball7 == loseZoneBottomRight{
-            ball7.removeFromParent()
-        }
-        if ball8 == loseZoneTopRight || ball8 == loseZoneTopLeft || ball8 == loseZoneBottomLeft || ball8 == loseZoneBottomRight{
-            ball8.removeFromParent()
-        }
-        if ball9 == loseZoneTopRight || ball9 == loseZoneTopLeft || ball9 == loseZoneBottomLeft || ball9 == loseZoneBottomRight{
-            ball9.removeFromParent()
-        }
-        if ball10 == loseZoneTopRight || ball10 == loseZoneTopLeft || ball10 == loseZoneBottomLeft || ball10 == loseZoneBottomRight{
-            ball10.removeFromParent()
-        }
-     */
-    }
-    override func didMove(to view: SKView) {
-        physicsWorld.contactDelegate = self
-        self.physicsBody = SKPhysicsBody(edgeLoopFrom: frame)
-        createBackground()
-        makeBall()
-        makeBall2()
-        makeBall3()
-        makeBall4()
-        makeBall5()
-        makeBall6()
-        makeBall7()
-        makeBall8()
-        makeBall9()
-        makeBall10()
-        makePaddle()
-        makeBrick()
-        makeLoseZoneTopRight()
-        makeLoseZoneTopLeft()
-        makeLoseZoneBottomLeft()
-        makeLoseZoneBottomRight()
-        
-        ball.physicsBody?.isDynamic = true
-        ball.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 0))
-        ball2.physicsBody?.isDynamic = true
-        ball2.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 0))
-        ball3.physicsBody?.isDynamic = true
-        ball3.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 0))
-        ball4.physicsBody?.isDynamic = true
-        ball4.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 0))
-        ball5.physicsBody?.isDynamic = true
-        ball5.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 0))
-        ball6.physicsBody?.isDynamic = true
-        ball6.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 0))
-        ball7.physicsBody?.isDynamic = true
-        ball7.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 0))
-        ball8.physicsBody?.isDynamic = true
-        ball8.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 0))
-        ball9.physicsBody?.isDynamic = true
-        ball9.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 0))
-        ball10.physicsBody?.isDynamic = true
-        ball10.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 0))
         
         func makeBall9(){
             ball9 = SKShapeNode(circleOfRadius: 10)
@@ -375,13 +294,6 @@
             ball10.physicsBody?.contactTestBitMask = (ball10.physicsBody?.collisionBitMask)!
             addChild(ball10)
         }
-        
-        
-        //Calculate impulse
-       
-        
-        
-        
         
         func makePaddle(){
             
@@ -442,7 +354,7 @@
         }
         func makeLoseZoneBottomRight(){
             loseZoneBottomRight = SKSpriteNode(color: UIColor.red, size: CGSize(width:frame.width/50, height: 10))
-            loseZoneBottomRight = SKSpriteNode(imageNamed: "blackHole")
+            loseZoneBottomRight = SKSpriteNode( imageNamed: "blackHole")
             loseZoneBottomRight.position = CGPoint(x: frame.midX+170, y: frame.maxY - 645)
             loseZoneBottomRight.name = "loseZoneTopRight"
             loseZoneBottomRight.physicsBody = SKPhysicsBody(circleOfRadius: 10)
@@ -452,3 +364,9 @@
         }
         
     }
+
+        
+    
+    
+    
+    
